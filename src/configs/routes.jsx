@@ -1,0 +1,17 @@
+export const routes = {
+    dashboard: '/',
+    login: '/login',
+    changePassword: '/change-password',
+    about: '/about',
+    profile: '/profile',
+    teachers: '/teachers',
+    detailTeacher: '/teachers/:id',
+    courses: '/courses',
+    detailCourse: '/courses/:id',
+    myCourses: '/my-courses',
+    detailMyCourse: '/my-courses/:id',
+    schedules: '/schedules',
+    messages: '/messages',
+    students: '/students',
+    reviews: '/reviews',
+};
