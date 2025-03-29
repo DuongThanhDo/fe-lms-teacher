@@ -23,10 +23,6 @@
   transition: transform 0.3s ease-in-out;
 }
 
-.course-title {
-  min-height: 30%;
-}
-
 /* .course-card:hover .image-container img {
     transform: scale(1.2);
   }
