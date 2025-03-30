@@ -4,13 +4,20 @@ import DefaultLayout from "./layouts/DefaultLayout";
 import { Fragment, useEffect, useState } from "react";
 import { publicRoutes } from "./routes/publicRoutes";
 import { privateRoutes } from "./routes/privateRoutes";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "./store/slices/categorySlice";
 
 function App() {
   const authState = useSelector((state) => state.auth);
   const login = authState.isLoggedIn;
 
   const [allRoutes, setAllRoutes] = useState([]);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, [dispatch]);
 
   useEffect(() => {
     const tempPrivateRoutes = login ? privateRoutes : [];

@@ -55,7 +55,7 @@ const CourseList = ({ courses }) => {
       render: (text, record) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           <Image
-            src={record.image}
+            src={record.image?.file_url}
             width={80}
             height={50}
             style={{ borderRadius: 5 }}
@@ -101,13 +101,6 @@ const CourseList = ({ courses }) => {
       render: (status) => (
         <Tag color={statusColors[status]}>{statusLabels[status]}</Tag>
       ),
-    },
-    {
-      title: "Ngày tạo",
-      dataIndex: "created_at",
-      key: "created_at",
-      render: (date) =>
-        date ? moment(date).format("DD-MM-YYYY") : "Chưa cập nhật",
     },
     {
       title: "Hành động",

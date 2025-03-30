@@ -5,7 +5,8 @@ import { SearchOutlined } from "@ant-design/icons";
 import ModalCreateCourse from "../../components/ModalCreateCourse";
 import CourseList from "../../components/CourseList";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "../../store/slices/categorySlice";
 
 const { Option } = Select;
 
@@ -17,6 +18,7 @@ const Courses = () => {
   const [status, setStatus] = useState(null);
 
   const user = useSelector((state) => state.auth.userInfo);
+  const categories = useSelector((state) => state.categories.list);
 
   const fetchCourses = async () => {
     try {
@@ -39,13 +41,11 @@ const Courses = () => {
   const handleSearch = () => {
     fetchCourses();
     console.log(courses);
-    
   };
 
   return (
     <Container className="my-4">
       <div className="w-100 d-flex flex-wrap align-items-center justify-content-between gap-2 py-3 bg-white rounded mb-3">
-        {/* Ô tìm kiếm */}
         <Input
           placeholder="Tìm kiếm"
           style={{ maxWidth: "50%" }}
@@ -54,7 +54,6 @@ const Courses = () => {
           onChange={(e) => setSearchValue(e.target.value)}
         />
 
-        {/* Dropdown danh mục */}
         <Select
           placeholder="Danh mục"
           style={{ minWidth: "200px" }}
@@ -62,12 +61,12 @@ const Courses = () => {
           onChange={(value) => setCategory(value)}
           allowClear
         >
-          <Option value="cntt">Công nghệ thông tin</Option>
-          <Option value="design">Thiết kế</Option>
-          <Option value="marketing">Marketing</Option>
+          {categories.map((category) => 
+            <Option value={category.id}>{category.name}</Option>
+          )}
+
         </Select>
 
-        {/* Dropdown loại */}
         <Select
           placeholder="Loại"
           style={{ minWidth: "100px" }}
@@ -79,7 +78,6 @@ const Courses = () => {
           <Option value="offline">Offline</Option>
         </Select>
 
-        {/* Dropdown trạng thái */}
         <Select
           placeholder="Trạng thái"
           style={{ minWidth: "100px" }}
@@ -94,7 +92,6 @@ const Courses = () => {
           <Option value="rejected">Bị từ chối</Option>
         </Select>
 
-        {/* Nút tìm kiếm */}
         <Button
           type="primary"
           icon={<SearchOutlined />}
@@ -102,7 +99,6 @@ const Courses = () => {
           onClick={handleSearch}
         />
 
-        {/* Nút thêm khóa học mới */}
         <div className="bg-teal-600 flex items-center !ml-2">
           <ModalCreateCourse />
         </div>

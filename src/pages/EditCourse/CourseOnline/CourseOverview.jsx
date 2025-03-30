@@ -1,30 +1,35 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, DatePicker, Select, Button, message } from "antd";
-import { useSelector } from "react-redux";
-import moment from "moment";
+import { Form, Input, Select, Button, message } from "antd";
+import { Card } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const CourseOverview = () => {
   const [form] = Form.useForm();
-  const user = useSelector((state) => state.auth.userInfo);
   const [loading, setLoading] = useState(false);
-  const [courseId, setCourseId] = useState(null);
+  const [course, setCourse] = useState(null);
+
+  const { id: courseId } = useParams();
+
+  const categories = useSelector((state) => state.categories.list);
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (!courseId) return;
 
     const fetchCourseDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/courses/${user.id}`);
+        const response = await axios.get(
+          `http://localhost:5000/courses/${courseId}`
+        );
         const data = response.data;
+        setCourse(data);
 
-        setCourseId(data.id);
         form.setFieldsValue({
-          title: data.title || "",
+          name: data.name || "",
           description: data.description || "",
-          startDate: data.start_date ? moment(data.start_date) : null,
-          category: data.category || "",
-          duration: data.duration || "",
+          category: data.category?.id || "",
+          price: data.price || "",
         });
       } catch (error) {
         console.error("Lỗi tải thông tin khóa học:", error);
@@ -32,19 +37,18 @@ const CourseOverview = () => {
     };
 
     fetchCourseDetails();
-  }, [user?.id, form]);
+  }, [courseId, form]);
 
   const handleSave = async (values) => {
-    if (!user?.id || !courseId) return;
+    if (!courseId) return;
     setLoading(true);
 
     try {
       await axios.put(`http://localhost:5000/courses/${courseId}`, {
-        title: values.title || null,
+        name: values.name || null,
         description: values.description || null,
-        start_date: values.startDate ? values.startDate.format("YYYY-MM-DD") : null,
         category: values.category || null,
-        duration: values.duration || null,
+        price: values.price || null,
       });
 
       message.success("Thông tin khóa học đã được cập nhật thành công!");
@@ -56,30 +60,30 @@ const CourseOverview = () => {
   };
 
   return (
-    <Form form={form} layout="vertical" onFinish={handleSave}>
-      <Form.Item label="Tên khóa học" name="title">
-        <Input placeholder="Nhập tên khóa học" />
-      </Form.Item>
-      <Form.Item label="Mô tả khóa học" name="description">
-        <Input.TextArea placeholder="Nhập mô tả khóa học" rows={4} />
-      </Form.Item>
-      <Form.Item label="Ngày bắt đầu" name="startDate">
-        <DatePicker style={{ width: "100%" }} />
-      </Form.Item>
-      <Form.Item label="Danh mục" name="category">
-        <Select>
-          <Select.Option value="frontend">Frontend</Select.Option>
-          <Select.Option value="backend">Backend</Select.Option>
-          <Select.Option value="fullstack">Fullstack</Select.Option>
-        </Select>
-      </Form.Item>
-      <Form.Item label="Thời gian học (tuần)" name="duration">
-        <Input placeholder="Nhập thời gian học" />
-      </Form.Item>
-      <Button type="primary" htmlType="submit" loading={loading}>
-        Lưu thông tin
-      </Button>
-    </Form>
+    <Card className="p-4">
+      <Form form={form} layout="vertical" onFinish={handleSave}>
+        <Form.Item label="Tên khóa học" name="name">
+          <Input placeholder="Nhập tên khóa học" />
+        </Form.Item>
+        <Form.Item label="Mô tả khóa học" name="description">
+          <Input.TextArea placeholder="Nhập mô tả khóa học" rows={4} />
+        </Form.Item>
+        <Form.Item label="Danh mục" name="category">
+          <Select
+            onChange={(value) => form.setFieldsValue({ category: Number(value) })}
+          >
+            {categories.map((category) => 
+            <Select.Option value={category.id}>{category.name}</Select.Option>)}
+          </Select>
+        </Form.Item>
+        <Form.Item label="Giá" name="price">
+          <Input placeholder="Nhập giá" />
+        </Form.Item>
+        <Button type="primary" htmlType="submit" loading={loading}>
+          Lưu thông tin
+        </Button>
+      </Form>
+    </Card>
   );
 };
 

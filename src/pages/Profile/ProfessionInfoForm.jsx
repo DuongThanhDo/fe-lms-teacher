@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Form, Input, Button, message } from "antd";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { Card } from "react-bootstrap";
 
 const ProfessionInfoForm = () => {
   const [form] = Form.useForm();
@@ -13,7 +14,9 @@ const ProfessionInfoForm = () => {
 
     const fetchProfessionInfo = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/professions/${user.id}`);
+        const response = await axios.get(
+          `http://localhost:5000/professions/${user.id}`
+        );
         const data = response.data;
 
         form.setFieldsValue({
@@ -49,20 +52,22 @@ const ProfessionInfoForm = () => {
   };
 
   return (
-    <Form form={form} layout="vertical" onFinish={handleSave}>
-      <Form.Item label="Chuyên ngành" name="major">
-        <Input placeholder="Nhập chuyên ngành" />
-      </Form.Item>
-      <Form.Item label="Trình độ" name="level">
-        <Input placeholder="Nhập trình độ" />
-      </Form.Item>
-      <Form.Item label="Kinh nghiệm làm việc" name="bio">
-        <Input.TextArea placeholder="Nhập kinh nghiệm làm việc" rows={4} />
-      </Form.Item>
-      <Button type="primary" htmlType="submit" loading={loading}>
-        Lưu thông tin
-      </Button>
-    </Form>
+    <Card className="p-4">
+      <Form form={form} layout="vertical" onFinish={handleSave}>
+        <Form.Item label="Chuyên ngành" name="major">
+          <Input placeholder="Nhập chuyên ngành" />
+        </Form.Item>
+        <Form.Item label="Trình độ" name="level">
+          <Input placeholder="Nhập trình độ" />
+        </Form.Item>
+        <Form.Item label="Kinh nghiệm làm việc" name="bio">
+          <Input.TextArea placeholder="Nhập kinh nghiệm làm việc" rows={4} />
+        </Form.Item>
+        <Button type="primary" htmlType="submit" loading={loading}>
+          Lưu thông tin
+        </Button>
+      </Form>
+    </Card>
   );
 };
 
