@@ -4,13 +4,20 @@ import CourseOverview from "./CourseOverview";
 import Curriculum from "./Curriculum";
 import TargetStudents from "./TargetStudents";
 import CourseImageUpload from "./CourseImageUpload";
+import { CurriculumProvider } from "../../../context/CurriculumContext";
 
 const { TabPane } = Tabs;
 
 const CourseOnline = () => {
   return (
     <div className="container mt-4">
-      <div style={{ display:"flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <h2>Thông tin khóa học</h2>
         <Button type="primary" style={{ marginTop: 20 }}>
           Gửi đi để xem xét
@@ -21,7 +28,9 @@ const CourseOnline = () => {
           <CourseOverview />
         </TabPane>
         <TabPane tab="Chương trình giảng dạy" key="2">
-          <Curriculum />
+          <CurriculumProvider>
+            <Curriculum />
+          </CurriculumProvider>
         </TabPane>
         <TabPane tab="Học viên mục tiêu" key="3">
           <TargetStudents />

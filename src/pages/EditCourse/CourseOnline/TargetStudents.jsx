@@ -12,7 +12,6 @@ const TargetStudents = () => {
     const courseId = parseInt(id, 10);
     const [learningGoals, setLearningGoals] = useState([]);
     const [requirements, setRequirements] = useState([]);
-    const [loading, setLoading] = useState(true);
   
     useEffect(() => {
       axios.get(`${API_BASE_URL}/course-outcomes?courseId=${courseId}`)
@@ -22,10 +21,7 @@ const TargetStudents = () => {
       axios.get(`${API_BASE_URL}/course-requirements?courseId=${courseId}`)
         .then((res) => setRequirements(res.data))
         .catch((err) => console.error(err))
-        .finally(() => setLoading(false));
     }, [courseId]);
-  
-    if (loading) return <Spin size="large" />;
   
     return (
       <Card className="p-4">
