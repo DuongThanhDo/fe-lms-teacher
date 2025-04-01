@@ -104,7 +104,7 @@ const Courses = () => {
         </div>
       </div>
 
-      <CourseList courses={courses} />
+      <CourseList courses={courses} fetchCourses={fetchCourses} />
     </Container>
   );
 };

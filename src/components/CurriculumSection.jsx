@@ -20,9 +20,9 @@ const CurriculumSection = ({ section }) => {
 
   const showDeleteConfirm = () => {
     confirm({
-      title: "Xác nhận xóa phần này?",
+      title: "Xác nhận xóa chương này?",
       icon: <ExclamationCircleOutlined />,
-      content: "Phần này và tất cả bài giảng bên trong sẽ bị xóa vĩnh viễn. Bạn có chắc chắn muốn tiếp tục?",
+      content: "Chương này và tất cả bài giảng bên trong sẽ bị xóa vĩnh viễn. Bạn có chắc chắn muốn tiếp tục?",
       okText: "Xóa",
       okType: "danger",
       cancelText: "Hủy",
@@ -45,7 +45,7 @@ const CurriculumSection = ({ section }) => {
               <Button style={{ marginLeft: 8 }} onClick={() => setEditing(false)} icon={<CloseOutlined />}>Hủy</Button>
             </>
           ) : (
-            <span>{`Phần ${section.index + 1}: ${section.title}`}</span>
+            <span>{`Chương ${section.index + 1}: ${section.title}`}</span>
           )}
 
           {hovered && !editing && (

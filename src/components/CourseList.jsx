@@ -6,8 +6,8 @@ import {
   Menu,
   Dropdown as AntDropdown,
   message,
+  Modal,
 } from "antd";
-import moment from "moment";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -17,6 +17,8 @@ import {
 import { Button } from "react-bootstrap";
 import { configs } from "../configs";
 import { useNavigate } from "react-router-dom";
+import { CourseStatus } from "../utils/enums";
+import axios from "axios";
 
 const statusColors = {
   draft: "gray",
@@ -34,8 +36,35 @@ const statusLabels = {
   rejected: "Bị từ chối",
 };
 
-const CourseList = ({ courses }) => {
+const CourseList = ({ courses, fetchCourses }) => {
   const navigate = useNavigate();
+
+  const handleDeleteCourse = async (courseId) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5000/courses/${courseId}`
+      );
+      message.success("Khóa học đã được xóa thành công");
+      fetchCourses();
+    } catch (error) {
+      console.error("Lỗi khi xóa khóa học:", error);
+      message.error("Không thể xóa khóa học. Vui lòng thử lại.");
+    }
+  };
+
+  const confirmDeleteCourse = (courseId) => {
+    Modal.confirm({
+      title: "Xác nhận xóa khóa học",
+      icon: <DeleteOutlined style={{ color: "red" }} />,
+      content: "Bạn có chắc chắn muốn xóa khóa học này không?",
+      centered: true,
+      okText: "Xóa",
+      cancelText: "Hủy",
+      onOk() {
+        handleDeleteCourse(courseId);
+      },
+    });
+  };
 
   const handleAction = (key, record) => {
     if (key === "view") {
@@ -43,7 +72,7 @@ const CourseList = ({ courses }) => {
     } else if (key === "edit") {
       navigate(`/courses/edit/${record.id}`);
     } else if (key === "delete") {
-      message.error(`Xóa khóa học: ${record.name}`);
+      confirmDeleteCourse(record.id);
     }
   };
 
@@ -60,9 +89,18 @@ const CourseList = ({ courses }) => {
             height={50}
             style={{ borderRadius: 5 }}
           />
-          <div style={{ marginLeft: 12 }}>
+          <div style={{ marginLeft: 12, maxWidth: 300 }}>
             <div style={{ fontWeight: "bold" }}>{record.name}</div>
-            <div style={{ fontSize: 12, color: "#888" }}>
+            <div
+              style={{
+                fontSize: 12,
+                color: "#888",
+                width: "100%",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
               {record.description}
             </div>
           </div>
@@ -121,9 +159,11 @@ const CourseList = ({ courses }) => {
               >
                 Sửa khóa học
               </Menu.Item>
-              <Menu.Item key="delete" icon={<DeleteOutlined />} danger>
-                Xóa khóa học
-              </Menu.Item>
+              {record.status === CourseStatus.DRAFT && (
+                <Menu.Item key="delete" icon={<DeleteOutlined />} danger>
+                  Xóa khóa học
+                </Menu.Item>
+              )}
             </Menu>
           }
           trigger={["click"]}

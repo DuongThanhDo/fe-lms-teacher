@@ -29,7 +29,7 @@ const Curriculum = () => {
         />
       ) : (
         <Button type="dashed" onClick={() => setIsAddingSection(true)} icon={<PlusOutlined />}>
-          Thêm phần
+          Thêm chương
         </Button>
       )}
     </div>

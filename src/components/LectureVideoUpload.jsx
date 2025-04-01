@@ -6,6 +6,7 @@ import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 const LectureVideoUpload = ({ lecture, onUpdateVideo }) => {
   const [videoUrl, setVideoUrl] = useState(lecture?.video?.file_url || "");
   const [fileName, setFileName] = useState(lecture?.video?.file_name || "");
+  const [videoKey, setVideoKey] = useState(Date.now());
 
   const [loading, setLoading] = useState(false);
 
@@ -42,13 +43,11 @@ const LectureVideoUpload = ({ lecture, onUpdateVideo }) => {
     try {
       const response = await fetchUploadLectureVideo(lecture.id, file);
       if (response.video) {
-        const newVideoUrl = response.video.file_url;
+        const newVideoUrl = `${response.video.file_url}#${Date.now()}`;
   
-        setVideoUrl(`${newVideoUrl}#${Date.now()}`);
+        setVideoUrl(newVideoUrl);
         setFileName(response.video.file_name);
-
-        console.log(videoUrl);
-        
+        setVideoKey(Date.now());
   
         if (onUpdateVideo) onUpdateVideo(newVideoUrl, response.video.file_name);
       }
@@ -67,7 +66,7 @@ const LectureVideoUpload = ({ lecture, onUpdateVideo }) => {
       {videoUrl ? (
         <Row align="middle" gutter={16}>
           <Col span={4}>
-            <video width="100%" controls>
+            <video key={videoKey} width="100%" controls>
               <source src={videoUrl} type="video/mp4" />
               Trình duyệt của bạn không hỗ trợ phát video.
             </video>
