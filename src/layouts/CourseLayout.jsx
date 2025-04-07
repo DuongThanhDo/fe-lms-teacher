@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Layout, Button, Typography, Collapse } from "antd";
-import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
-import "../assets/css/CourseLayout.css";  // Import CSS file
+import {
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
+  CodeOutlined,
+  PlayCircleOutlined,
+  QuestionCircleOutlined,
+} from "@ant-design/icons";
+import "../assets/css/CourseLayout.css"; // Import CSS file
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -49,6 +55,23 @@ const CourseLayout = ({ children }) => {
     fetchCourse();
     fetchContentCourse();
   }, [courseId]);
+
+  const getVideoDuration = (videoUrl) => {
+    if (!videoUrl) return "Chưa có video";
+    const videoElement = document.createElement("video");
+    videoElement.src = videoUrl;
+    return new Promise((resolve) => {
+      videoElement.onloadedmetadata = () => {
+        const minutes = Math.floor(videoElement.duration / 60);
+        const seconds = Math.floor(videoElement.duration % 60);
+
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+        const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+
+        resolve(`${formattedMinutes}:${formattedSeconds}`);
+      };
+    });
+  };
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
@@ -98,23 +121,49 @@ const CourseLayout = ({ children }) => {
             <Collapse expandIconPosition="end" style={{ width: "100%" }}>
               {contents.map((chapter, indexC) => (
                 <Panel
-                className="custom-panel-header"
-                header={`${indexC + 1}. ${chapter.title}`}
-                key={chapter.id}
-              >
-                <div className="custom-panel-content">
-                  <ul>
-                    {chapter.items.map((item, indexI) => (
-                      <li key={item.id}>
-                        <p>
-                          {indexI + 1}. {item.title}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Panel>
-              
+                  className="custom-panel-header"
+                  header={`${indexC + 1}. ${chapter.title}`}
+                  key={chapter.id}
+                >
+                  <div className="custom-panel-content">
+                    <ul>
+                      {chapter.items.map((item, indexI) => (
+                        <li key={item.id}>
+                          <p>
+                            {indexI + 1}. {item.title}
+                          </p>
+                          {item.type === "lecture" &&
+                          item.video &&
+                          item.video.file_url ? (
+                            <p style={{ fontSize: 12, color: "#888" }}>
+                              <span className="video-duration">
+                                <PlayCircleOutlined
+                                  style={{ marginRight: 8 }}
+                                />{" "}
+                                {getVideoDuration(item.video.file_url)}
+                              </span>
+                            </p>
+                          ) : item.type === "code" ? (
+                            <p style={{ fontSize: 12, color: "#888" }}>
+                              <span>
+                                <CodeOutlined style={{ marginRight: 8 }} /> code
+                              </span>
+                            </p>
+                          ) : item.type === "quiz" ? (
+                            <p style={{ fontSize: 12, color: "#888" }}>
+                              <span>
+                                <QuestionCircleOutlined
+                                  style={{ marginRight: 8 }}
+                                />{" "}
+                                quiz
+                              </span>
+                            </p>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </Panel>
               ))}
             </Collapse>
           </div>
