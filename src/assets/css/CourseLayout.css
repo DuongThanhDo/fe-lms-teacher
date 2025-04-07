@@ -11,7 +11,6 @@
 }
 
 .video-section {
-  background-color: #ddd;
   height: 250px;
   display: flex;
   align-items: center;
@@ -73,14 +72,28 @@
 
 .custom-panel-content p {
   margin: 0;
-  padding: 4px 0;
 }
 
 .ant-collapse-content-box {
-    padding: 0 !important;
+  padding: 0 !important;
 }
 
 .ant-collapse {
-    border: none !important;
-    border-radius: 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.ant-layout {
+  background-color: #fff;
+}
+
+.selected-item {
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.selected-item:hover {
+  background-color: #bae7ff;
 }

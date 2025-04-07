@@ -68,7 +68,7 @@ const LectureItem = ({ lecture, lectureIndex }) => {
 
   return (
     <Collapse className="mb-3" style={{ width: "100%" }}>
-      <Panel
+      <Panel 
         header={
           <div
             onMouseEnter={() => setHovered(true)}
@@ -139,56 +139,58 @@ const LectureItem = ({ lecture, lectureIndex }) => {
         }
         key={lecture.id}
       >
-        <LectureVideoUpload lecture={lecture} />
-
-        {isEditingDesc ? (
-          <>
-            <h4>Mô tả bài giảng</h4>
-            <Input.TextArea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={4}
-            />
-            <div style={{ marginTop: 10 }}>
+        <div style={{ backgroundColor: "rgba(0, 0, 0, 0.028)", padding: 24 }}>
+          <LectureVideoUpload lecture={lecture} />
+  
+          {isEditingDesc ? (
+            <>
+              <h4>Mô tả bài giảng</h4>
+              <Input.TextArea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={4}
+              />
+              <div style={{ marginTop: 10 }}>
+                <Button
+                  icon={<CloseOutlined />}
+                  onClick={() => setIsEditingDesc(false)}
+                >
+                  Hủy
+                </Button>
+                <Button
+                  type="primary"
+                  icon={<CheckOutlined />}
+                  onClick={() => {
+                    editLecture(lecture.id, title, description);
+                    setIsEditingDesc(false);
+                  }}
+                  style={{ marginLeft: 10 }}
+                >
+                  Lưu
+                </Button>
+              </div>
+            </>
+          ) : description ? (
+            <>
+              <p style={{ whiteSpace: "pre-line" }}>{description}</p>
               <Button
-                icon={<CloseOutlined />}
-                onClick={() => setIsEditingDesc(false)}
+                type="dashed"
+                icon={<EditOutlined />}
+                onClick={() => setIsEditingDesc(true)}
               >
-                Hủy
+                Sửa mô tả
               </Button>
-              <Button
-                type="primary"
-                icon={<CheckOutlined />}
-                onClick={() => {
-                  editLecture(lecture.id, title, description);
-                  setIsEditingDesc(false);
-                }}
-                style={{ marginLeft: 10 }}
-              >
-                Lưu
-              </Button>
-            </div>
-          </>
-        ) : description ? (
-          <>
-            <p style={{ whiteSpace: "pre-line" }}>{description}</p>
+            </>
+          ) : (
             <Button
               type="dashed"
               icon={<EditOutlined />}
               onClick={() => setIsEditingDesc(true)}
             >
-              Sửa mô tả
+              Thêm mô tả
             </Button>
-          </>
-        ) : (
-          <Button
-            type="dashed"
-            icon={<EditOutlined />}
-            onClick={() => setIsEditingDesc(true)}
-          >
-            Thêm mô tả
-          </Button>
-        )}
+          )}
+        </div>
       </Panel>
     </Collapse>
   );

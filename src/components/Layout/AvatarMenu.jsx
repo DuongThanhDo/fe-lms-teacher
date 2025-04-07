@@ -3,8 +3,8 @@ import { Dropdown, Menu, Avatar, Modal } from "antd";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../store/slices/authSlice";
-import { configs } from "../configs";
+import { logoutUser } from "../../store/slices/authSlice";
+import { configs } from "../../configs";
 
 const AvatarMenu = () => {
   const [imageUrl, setImageUrl] = useState(null);

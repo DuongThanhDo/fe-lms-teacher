@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { FacebookOutlined, InstagramOutlined, YoutubeOutlined } from "@ant-design/icons";
-import { assets } from "../assets";
+import { assets } from "../../assets";
 
 const Footer = () => {
   return (
