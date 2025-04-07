@@ -68,7 +68,7 @@ const CourseList = ({ courses, fetchCourses }) => {
 
   const handleAction = (key, record) => {
     if (key === "view") {
-      message.info(`Xem chi tiết: ${record.name}`);
+      navigate(`/courses/view/${record.id}`);
     } else if (key === "edit") {
       navigate(`/courses/edit/${record.id}`);
     } else if (key === "delete") {
@@ -90,7 +90,15 @@ const CourseList = ({ courses, fetchCourses }) => {
             style={{ borderRadius: 5 }}
           />
           <div style={{ marginLeft: 12, maxWidth: 300 }}>
-            <div style={{ fontWeight: "bold" }}>{record.name}</div>
+            <div
+              style={{
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+              onClick={() => navigate(`/courses/view/${record.id}`)}
+            >
+              {record.name}
+            </div>
             <div
               style={{
                 fontSize: 12,

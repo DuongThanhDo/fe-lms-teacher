@@ -1,0 +1,44 @@
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+const ViewCourse = () => {
+  const { id: courseId } = useParams();
+  const [content, setContent] = useState([]);
+  const navigate = useNavigate();
+
+  const fetchContentCourse = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/chapters/content/${courseId}`
+      );
+      setContent(response.data);
+    } catch (error) {
+      console.error(
+        "Lỗi khi lấy chapters:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  useEffect(() => {
+    fetchContentCourse();
+  }, []);
+
+  useEffect(() => {
+    if (content.length > 0) {
+      const firstContent = content[0]?.items[0];
+      if (firstContent?.type === "lecture") {
+        navigate(`/courses/${courseId}/lecture/${firstContent.id}`);
+      } else if (firstContent?.type === "code") {
+        navigate(`/courses/${courseId}/code/${firstContent.id}`);
+      } else if (firstContent?.type === "quiz") {
+        navigate(`/courses/${courseId}/quiz/${firstContent.id}`);
+      }
+    }
+  }, [content, courseId, navigate]);
+
+  return <p>Đang tải nội dung khóa học...</p>;
+};
+
+export default ViewCourse;

@@ -12,9 +12,7 @@ export const CurriculumProvider = ({ children }) => {
 
   const fetchContentCourse = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/chapters`, {
-        params: { content: courseId },
-      });
+      const response = await axios.get(`http://localhost:5000/chapters/content/${courseId}`);
       setSections(response.data);
     } catch (error) {
       console.error(
