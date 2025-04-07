@@ -1,7 +1,7 @@
 // rafce
 import React from "react";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import Header from "../components/Layout/Header";
+import Sidebar from "../components/Layout/Sidebar";
 
 const DefaultLayout = ({ children }) => {
   return (

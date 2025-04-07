@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import NotificationMenu from "./NotificationMenu";
 import AvatarMenu from "./AvatarMenu";
-import { assets } from "../assets";
+import { assets } from "../../assets";
 import { Button } from "antd";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import "../assets/css/Header.css";
+import "../../assets/css/Header.css";
 
 const Header = () => {
   const authState = useSelector((state) => state.auth);

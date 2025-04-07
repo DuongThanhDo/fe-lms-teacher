@@ -8,8 +8,8 @@ import {
   MessageOutlined,
 } from "@ant-design/icons";
 import { Link, useLocation } from "react-router-dom";
-import "../assets/css/Sidebar.css";
-import { configs } from "../configs";
+import "../../assets/css/Sidebar.css";
+import { configs } from "../../configs";
 
 const { Sider } = Layout;
 
@@ -41,7 +41,7 @@ const Sidebar = () => {
       <Menu
         theme="dark"
         mode="vertical"
-        selectedKeys={[getActiveKey()]} // Active menu theo đường dẫn
+        selectedKeys={[getActiveKey()]}
         className="custom-sidebar"
       >
         <Menu.Item key={configs.routes.dashboard} icon={<AppstoreOutlined />}>
