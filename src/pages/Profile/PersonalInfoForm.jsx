@@ -3,6 +3,7 @@ import { Form, Input, DatePicker, Select, Button, message } from "antd";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import axios from "axios";
+import { Card } from "react-bootstrap";
 
 const PersonalInfoForm = () => {
   const [form] = Form.useForm();
@@ -54,6 +55,7 @@ const PersonalInfoForm = () => {
   };
 
   return (
+    <Card className="p-4">
     <Form form={form} layout="vertical" onFinish={handleSave}>
       <Form.Item label="Họ và tên" name="name">
         <Input placeholder="Nhập họ và tên" />
@@ -76,7 +78,7 @@ const PersonalInfoForm = () => {
       <Button type="primary" htmlType="submit" loading={loading}>
         Lưu thông tin
       </Button>
-    </Form>
+    </Form></Card>
   );
 };
 

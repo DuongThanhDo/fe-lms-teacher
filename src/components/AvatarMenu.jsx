@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Dropdown, Menu, Avatar, Modal } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../store/slices/authSlice";
 import { configs } from "../configs";
 
 const AvatarMenu = () => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const user = useSelector((state) => state.auth.userInfo);
 
   useEffect(() => {
@@ -33,18 +31,19 @@ const AvatarMenu = () => {
     fetchUserAvatar();
   }, [user?.id]);
 
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
-  };
-
-  const handleLogout = () => {
-    dispatch(logoutUser());
-    navigate("/login");
-    setIsModalVisible(false);
+  const confirmLogout = () => {
+    Modal.confirm({
+      title: "Xác nhận đăng xuất",
+      icon: <LogoutOutlined />,
+      content: "Bạn có chắc chắn muốn đăng xuất không?",
+      centered: true,
+      okText: "Đăng xuất",
+      cancelText: "Hủy",
+      onOk() {
+        dispatch(logoutUser());
+        navigate("/login");
+      },
+    });
   };
 
   const userMenu = (
@@ -60,57 +59,35 @@ const AvatarMenu = () => {
           Đổi mật khẩu
         </Link>
       </Menu.Item>
-      <Menu.Item onClick={showModal} key="7">
+      <Menu.Item onClick={confirmLogout} key="7">
         Đăng xuất
       </Menu.Item>
     </Menu>
   );
 
   return (
-    <>
-      {" "}
-      <Dropdown
-        overlay={userMenu}
-        placement="bottomRight"
-        arrow
-        trigger={["click"]}
-      >
-        <div>
-          {imageUrl ? (
-            <img
-              src={`${imageUrl}?timestamp=${new Date().getTime()}`}
-              alt="Avatar"
-              style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "50%",
-                objectFit: "cover",
-                cursor: "pointer",
-              }}
-            />
-          ) : (
-            <Avatar
-              icon={<UserOutlined />}
-              style={{
-                cursor: "pointer",
-                verticalAlign: "middle",
-              }}
-            />
-          )}
-        </div>
-      </Dropdown>
-      <Modal
-        title="Xác nhận đăng xuất"
-        visible={isModalVisible}
-        onOk={handleLogout}
-        onCancel={handleCancel}
-        centered
-        okText="Đăng xuất"
-        cancelText="Hủy"
-      >
-        <p>Bạn có chắc chắn muốn đăng xuất không?</p>
-      </Modal>
-    </>
+    <Dropdown overlay={userMenu} placement="bottomRight" arrow trigger={["click"]}>
+      <div>
+        {imageUrl ? (
+          <img
+            src={`${imageUrl}?timestamp=${new Date().getTime()}`}
+            alt="Avatar"
+            style={{
+              width: "36px",
+              height: "36px",
+              borderRadius: "50%",
+              objectFit: "cover",
+              cursor: "pointer",
+            }}
+          />
+        ) : (
+          <Avatar
+            icon={<UserOutlined />}
+            style={{ cursor: "pointer", verticalAlign: "middle" }}
+          />
+        )}
+      </div>
+    </Dropdown>
   );
 };
 
