@@ -2,13 +2,17 @@ import { Tabs, Spin, message, Typography } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import CommentBox from "../../components/CommentBox";
+import { useSelector } from "react-redux";
 
 const { TabPane } = Tabs;
 
 const Lecture = () => {
   const { lectureId } = useParams();
+  const user = useSelector((state) => state.auth.userInfo);
   const [lecture, setLecture] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [videoKey, setVideoKey] = useState("");
 
   const fetchLecture = async () => {
     try {
@@ -16,6 +20,7 @@ const Lecture = () => {
         `http://localhost:5000/lectures/${lectureId}`
       );
       setLecture(response.data);
+      setVideoKey(`video-${lectureId}-${Date.now()}`);
     } catch (error) {
       message.error(error.response?.data?.message || "Lỗi khi tải bài giảng");
     } finally {
@@ -41,6 +46,7 @@ const Lecture = () => {
     <div style={{ width: "100%", paddingBottom: 100 }}>
       {lecture?.video?.file_url && (
         <div
+          key={lectureId}
           style={{
             width: "100%",
             backgroundColor: "black",
@@ -49,7 +55,7 @@ const Lecture = () => {
           }}
         >
           <video
-            key={lectureId}
+            key={videoKey}
             width="80%"
             style={{ maxWidth: "70vw" }}
             controls
@@ -69,7 +75,7 @@ const Lecture = () => {
             </Typography.Paragraph>
           </TabPane>
           <TabPane tab="Hỏi đáp" key="2">
-            <p>Hỏi đáp</p>
+              <CommentBox contentType="lecture" contentId={lecture.id} />
           </TabPane>
         </Tabs>
       </div>
