@@ -8,6 +8,7 @@ const ProfessionInfoForm = () => {
   const [form] = Form.useForm();
   const user = useSelector((state) => state.auth.userInfo);
   const [loading, setLoading] = useState(false);
+  const [profession, setProfession] = useState({});
 
   useEffect(() => {
     if (!user?.id) return;
@@ -19,10 +20,12 @@ const ProfessionInfoForm = () => {
         );
         const data = response.data;
 
+        setProfession(data[0]);
+
         form.setFieldsValue({
-          major: data.major || "",
-          level: data.level || "",
-          bio: data.bio || "",
+          major: data[0].major || "",
+          level: data[0].level || "",
+          bio: data[0].bio || "",
         });
       } catch (error) {
         console.error("Lỗi tải thông tin chuyên ngành:", error);
@@ -33,11 +36,12 @@ const ProfessionInfoForm = () => {
   }, [user?.id, form]);
 
   const handleSave = async (values) => {
-    if (!user?.id) return;
+    if (!profession?.id) return;
     setLoading(true);
+    console.log(values);
 
     try {
-      await axios.put(`http://localhost:5000/professions/${user.id}`, {
+      await axios.put(`http://localhost:5000/professions/${profession?.id}`, {
         major: values.major || null,
         level: values.level || null,
         bio: values.bio || null,
