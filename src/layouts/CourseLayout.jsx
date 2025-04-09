@@ -29,7 +29,6 @@ const CourseLayout = ({ children }) => {
   const [showSider, setShowSider] = useState(true);
   const [course, setCourse] = useState(null);
   const [contents, setContents] = useState([]);
-  const [durations, setDurations] = useState({});
   const [selectedItem, setSelectedItem] = useState({ type: null, id: null });
 
   const { courseId } = useParams();
@@ -47,7 +46,6 @@ const CourseLayout = ({ children }) => {
       const { course, contents } = await fetchCourseData(courseId);
       setCourse(course);
       setContents(contents);
-      handleDurations(contents);
     };
 
     loadData();
@@ -56,39 +54,6 @@ const CourseLayout = ({ children }) => {
   useEffect(() => {
     setSelectedItem({ type: itemType, id: itemId });
   }, [itemType, itemId]);
-
-  const getVideoDuration = useCallback((videoUrl) => {
-    return new Promise((resolve) => {
-      const video = document.createElement("video");
-      video.preload = "metadata";
-      video.src = videoUrl;
-      video.onloadedmetadata = () => {
-        const minutes = Math.floor(video.duration / 60);
-        const seconds = Math.floor(video.duration % 60);
-        const formatted = `${minutes < 10 ? "0" : ""}${minutes}:${
-          seconds < 10 ? "0" : ""
-        }${seconds}`;
-        resolve(formatted);
-      };
-      video.onerror = () => resolve("00:00");
-    });
-  }, []);
-
-  const handleDurations = useCallback(
-    async (data) => {
-      const result = {};
-      for (const chapter of data) {
-        for (const item of chapter.items) {
-          if (item.type === "lecture" && item.video?.file_url) {
-            const duration = await getVideoDuration(item.video.file_url);
-            result[item.id] = duration;
-          }
-        }
-      }
-      setDurations(result);
-    },
-    [getVideoDuration]
-  );
 
   const handleClickItem = useCallback(
     (item) => {
@@ -173,7 +138,6 @@ const CourseLayout = ({ children }) => {
             contents={contents}
             selectedItem={selectedItem}
             handleClickItem={handleClickItem}
-            durations={durations}
           />
         )}
       </Layout>

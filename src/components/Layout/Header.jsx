@@ -10,7 +10,6 @@ import "../../assets/css/Header.css";
 
 const Header = () => {
   const authState = useSelector((state) => state.auth);
-  console.log(authState);
 
   const [isLoggedIn, setIsLoggedIn] = useState(authState.isLoggedIn);
 
