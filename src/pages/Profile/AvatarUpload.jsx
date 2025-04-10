@@ -3,6 +3,7 @@ import { Button, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { configs } from "../../configs";
 
 const AvatarUpload = () => {
   const [profileId, setProfileId] = useState(null);
@@ -18,7 +19,7 @@ const AvatarUpload = () => {
 
     const fetchUserAvatar = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/user-profiles/${user.id}`);
+        const response = await axios.get(`${configs.API_BASE_URL}/user-profiles/${user.id}`);
         if(response.data.avatar != null) setImageUrl(response.data.avatar.file_url);
         setProfileId(response.data.id);
       } catch (error) {
@@ -47,7 +48,7 @@ const AvatarUpload = () => {
     formData.append("file", file);
 
     try {
-      await axios.put(`http://localhost:5000/user-profiles/upload/${profileId}`, formData, {
+      await axios.put(`${configs.API_BASE_URL}/user-profiles/upload/${profileId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

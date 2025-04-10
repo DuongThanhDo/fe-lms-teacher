@@ -11,6 +11,7 @@ import {
 import { useCurriculum } from "../context/CurriculumContext";
 import axios from "axios";
 import LectureVideoUpload from "./LectureVideoUpload";
+import { configs } from "../configs";
 
 const { Panel } = Collapse;
 const { confirm } = Modal;
@@ -25,7 +26,7 @@ const LectureItem = ({ lecture, lectureIndex }) => {
 
   const deleteLecture = async (lectureId) => {
     try {
-      await axios.delete(`http://localhost:5000/lectures/${lectureId}`);
+      await axios.delete(`${configs.API_BASE_URL}/lectures/${lectureId}`);
       fetchContentCourse();
     } catch (error) {
       console.error(
@@ -37,7 +38,7 @@ const LectureItem = ({ lecture, lectureIndex }) => {
 
   const editLecture = async (lectureId, newTitle, newDescription) => {
     try {
-      await axios.put(`http://localhost:5000/lectures/${lectureId}`, {
+      await axios.put(`${configs.API_BASE_URL}/lectures/${lectureId}`, {
         title: newTitle,
         description: newDescription,
       });

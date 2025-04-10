@@ -5,6 +5,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../store/slices/authSlice";
 import { assets } from "../../assets";
+import { configs } from "../../configs";
 
 const ChangePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
@@ -30,7 +31,7 @@ const ChangePassword = () => {
 
     setLoading(true);
     try {
-      const response = await axios.patch("http://localhost:5000/users/change-password", {
+      const response = await axios.patch(`${configs.API_BASE_URL}/users/change-password`, {
         email,
         oldPassword,
         newPassword,

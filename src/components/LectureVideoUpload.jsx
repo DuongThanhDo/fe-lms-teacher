@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Upload, Row, Col, message } from "antd";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
+import { configs } from "../configs";
 
 const LectureVideoUpload = ({ lecture, onUpdateVideo }) => {
   const [videoUrl, setVideoUrl] = useState(lecture?.video?.file_url || "");
@@ -16,7 +17,7 @@ const LectureVideoUpload = ({ lecture, onUpdateVideo }) => {
       formData.append("file", file);
 
       const response = await axios.put(
-        `http://localhost:5000/lectures/upload/${lectureId}`,
+        `${configs.API_BASE_URL}/lectures/upload/${lectureId}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

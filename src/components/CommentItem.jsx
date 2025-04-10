@@ -3,6 +3,7 @@ import { Avatar, Button, Input } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import axios from "axios";
 import dayjs from "dayjs";
+import { configs } from "../configs";
 
 function CommentItem({
   comment,
@@ -22,7 +23,7 @@ function CommentItem({
   const handleReply = async () => {
     if (!replyContent.trim()) return;
 
-    const res = await axios.post("http://localhost:5000/comments", {
+    const res = await axios.post(`${configs.API_BASE_URL}/comments`, {
       content: replyContent,
       user_id: user.id,
       commentable_type: contentType,

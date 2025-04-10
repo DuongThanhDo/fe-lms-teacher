@@ -30,7 +30,7 @@ const ModalCreateCourse = () => {
       console.log("Dữ liệu khóa học:", values);
 
       setLoading(true);
-      const response = await axios.post("http://localhost:5000/courses", {
+      const response = await axios.post(`${configs.API_BASE_URL}/courses`, {
         ...values,
         teacherId: user?.id,
       });

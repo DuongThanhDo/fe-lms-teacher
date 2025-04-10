@@ -18,7 +18,7 @@ const AvatarMenu = () => {
     const fetchUserAvatar = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5000/user-profiles/${user.id}`
+          `${configs.API_BASE_URL}/user-profiles/${user.id}`
         );
         if (!response.ok) throw new Error("Không thể tải ảnh đại diện.");
         const data = await response.json();

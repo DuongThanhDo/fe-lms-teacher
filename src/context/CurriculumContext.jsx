@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { configs } from "../configs";
 
 const CurriculumContext = createContext();
 
@@ -12,7 +13,7 @@ export const CurriculumProvider = ({ children }) => {
 
   const fetchContentCourse = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/chapters/content/${courseId}`);
+      const response = await axios.get(`${configs.API_BASE_URL}/chapters/content/${courseId}`);
       setSections(response.data);
     } catch (error) {
       console.error(
@@ -30,7 +31,7 @@ export const CurriculumProvider = ({ children }) => {
   const addSection = async (title) => {
     if (!title.trim() || !courseId) return;
     try {
-      const response = await axios.post("http://localhost:5000/chapters", {
+      const response = await axios.post(`${configs.API_BASE_URL}/chapters`, {
         courseId,
         title,
       });
@@ -45,7 +46,7 @@ export const CurriculumProvider = ({ children }) => {
 
   const deleteSection = async (sectionId) => {
     try {
-      await axios.delete(`http://localhost:5000/chapters/${sectionId}`);
+      await axios.delete(`${configs.API_BASE_URL}/chapters/${sectionId}`);
       setSections((prevSections) =>
         prevSections.filter((s) => s.id !== sectionId)
       );
@@ -60,7 +61,7 @@ export const CurriculumProvider = ({ children }) => {
   const editSection = async (sectionId, newTitle) => {
     if (!newTitle.trim()) return;
     try {
-      await axios.put(`http://localhost:5000/chapters/${sectionId}`, {
+      await axios.put(`${configs.API_BASE_URL}/chapters/${sectionId}`, {
         title: newTitle,
       });
       setSections((prevSections) =>
@@ -82,7 +83,7 @@ export const CurriculumProvider = ({ children }) => {
     try {
       switch (type) {
         case "lecture":
-          response = await axios.post("http://localhost:5000/lectures", {
+          response = await axios.post("${configs.API_BASE_URL}/lectures", {
             chapterId: Number(sectionId),
             title,
             order,

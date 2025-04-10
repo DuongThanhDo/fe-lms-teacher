@@ -3,6 +3,7 @@ import { Form, Input, Button, message } from "antd";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { Card } from "react-bootstrap";
+import { configs } from "../../configs";
 
 const ProfessionInfoForm = () => {
   const [form] = Form.useForm();
@@ -16,7 +17,7 @@ const ProfessionInfoForm = () => {
     const fetchProfessionInfo = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/professions/${user.id}`
+          `${configs.API_BASE_URL}/professions/${user.id}`
         );
         const data = response.data;
 
@@ -41,7 +42,7 @@ const ProfessionInfoForm = () => {
     console.log(values);
 
     try {
-      await axios.put(`http://localhost:5000/professions/${profession?.id}`, {
+      await axios.put(`${configs.API_BASE_URL}/professions/${profession?.id}`, {
         major: values.major || null,
         level: values.level || null,
         bio: values.bio || null,
