@@ -42,7 +42,7 @@ const CourseList = ({ courses, fetchCourses }) => {
   const handleDeleteCourse = async (courseId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/courses/${courseId}`
+        `${configs.API_BASE_URL}/courses/${courseId}`
       );
       message.success("Khóa học đã được xóa thành công");
       fetchCourses();

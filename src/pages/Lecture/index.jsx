@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import CommentBox from "../../components/CommentBox";
 import { useSelector } from "react-redux";
+import { configs } from "../../configs";
 
 const { TabPane } = Tabs;
 
@@ -17,7 +18,7 @@ const Lecture = () => {
   const fetchLecture = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/lectures/${lectureId}`
+        `${configs.API_BASE_URL}/lectures/${lectureId}`
       );
       setLecture(response.data);
       setVideoKey(`video-${lectureId}-${Date.now()}`);

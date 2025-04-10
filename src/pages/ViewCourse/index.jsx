@@ -2,6 +2,7 @@ import { message } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { configs } from "../../configs";
 
 const ViewCourse = () => {
   const { id: courseId } = useParams();
@@ -12,7 +13,7 @@ const ViewCourse = () => {
   const fetchContentCourse = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/chapters/content/${courseId}`
+        `${configs.API_BASE_URL}/chapters/content/${courseId}`
       );
       setContent(response.data);
       setLoading(false); 

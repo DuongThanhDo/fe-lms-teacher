@@ -6,6 +6,7 @@ import "../assets/css/CourseLayout.css";
 import SidebarCourse from "../components/Layout/SidebarCourse";
 import CourseHeader from "../components/Layout/CourseHeader";
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
+import { configs } from "../configs";
 
 const { Content, Footer } = Layout;
 const SIDEBAR_WIDTH = 320;
@@ -13,10 +14,10 @@ const SIDEBAR_WIDTH = 320;
 const fetchCourseData = async (courseId) => {
   try {
     const courseResponse = await axios.get(
-      `http://localhost:5000/courses/${courseId}`
+      `${configs.API_BASE_URL}/courses/${courseId}`
     );
     const contentsResponse = await axios.get(
-      `http://localhost:5000/chapters/content/${courseId}`
+      `${configs.API_BASE_URL}/chapters/content/${courseId}`
     );
     return { course: courseResponse.data, contents: contentsResponse.data };
   } catch (error) {

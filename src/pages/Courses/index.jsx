@@ -7,6 +7,7 @@ import CourseList from "../../components/CourseList";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../store/slices/categorySlice";
+import { configs } from "../../configs";
 
 const { Option } = Select;
 
@@ -23,7 +24,7 @@ const Courses = () => {
   const fetchCourses = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/courses/teacher",
+        `${configs.API_BASE_URL}/courses/teacher`,
         {
           params: { teacherId: user.id, searchValue, category, type, status },
         }

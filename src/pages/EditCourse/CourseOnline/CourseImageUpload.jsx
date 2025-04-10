@@ -3,6 +3,7 @@ import { Button, message, Upload } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import { configs } from '../../../configs';
 
 const CourseImageUpload = () => {
   const [imageUrl, setImageUrl] = useState(null);
@@ -18,7 +19,7 @@ const CourseImageUpload = () => {
     const fetchCourseDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/courses/${courseId}`
+          `${configs.API_BASE_URL}/courses/${courseId}`
         );
         const data = response.data;
         if(data.image != null) setImageUrl(data.image.file_url);
@@ -48,7 +49,7 @@ const CourseImageUpload = () => {
     formData.append("file", file);
 
     try {
-      await axios.put(`http://localhost:5000/courses/upload/${courseId}`, formData, {
+      await axios.put(`${configs.API_BASE_URL}/courses/upload/${courseId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

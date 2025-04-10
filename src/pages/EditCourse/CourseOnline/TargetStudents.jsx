@@ -4,8 +4,8 @@ import axios from "axios";
 import { Form, Spin } from "antd";
 import { Card } from "react-bootstrap";
 import EditableList from "../../../components/EditableList";
+import { configs } from "../../../configs";
 
-const API_BASE_URL = "http://localhost:5000";
 
 const TargetStudents = () => {
     const { id } = useParams();
@@ -14,11 +14,11 @@ const TargetStudents = () => {
     const [requirements, setRequirements] = useState([]);
   
     useEffect(() => {
-      axios.get(`${API_BASE_URL}/course-outcomes?courseId=${courseId}`)
+      axios.get(`${configs.API_BASE_URL}/course-outcomes?courseId=${courseId}`)
         .then((res) => setLearningGoals(res.data))
         .catch((err) => console.error(err));
   
-      axios.get(`${API_BASE_URL}/course-requirements?courseId=${courseId}`)
+      axios.get(`${configs.API_BASE_URL}/course-requirements?courseId=${courseId}`)
         .then((res) => setRequirements(res.data))
         .catch((err) => console.error(err))
     }, [courseId]);

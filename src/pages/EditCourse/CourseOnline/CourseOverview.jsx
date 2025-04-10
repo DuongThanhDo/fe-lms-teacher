@@ -4,6 +4,7 @@ import { Card } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { configs } from "../../../configs";
 
 const CourseOverview = () => {
   const [form] = Form.useForm();
@@ -20,7 +21,7 @@ const CourseOverview = () => {
     const fetchCourseDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/courses/${courseId}`
+          `${configs.API_BASE_URL}/courses/${courseId}`
         );
         const data = response.data;
         setCourse(data);
@@ -44,7 +45,7 @@ const CourseOverview = () => {
     setLoading(true);
 
     try {
-      await axios.put(`http://localhost:5000/courses/${courseId}`, {
+      await axios.put(`${configs.API_BASE_URL}/courses/${courseId}`, {
         name: values.name || null,
         description: values.description || null,
         category: values.category || null,

@@ -4,9 +4,9 @@ import axios from "axios";
 import { Form, Input, Button, Typography, Spin } from "antd";
 import { Card } from "react-bootstrap";
 import { DeleteOutlined } from "@ant-design/icons";
+import { configs } from "../configs";
 
 const { Text } = Typography;
-const API_BASE_URL = "http://localhost:5000";
 
 const EditableList = ({ title, description, apiEndpoint, items, setItems }) => {
   const { id } = useParams();
@@ -16,7 +16,7 @@ const EditableList = ({ title, description, apiEndpoint, items, setItems }) => {
 
   const handleAddItem = () => {
     if (newItem.trim()) {
-      axios.post(`${API_BASE_URL}/${apiEndpoint}`, { courseId, description: newItem })
+      axios.post(`${configs.API_BASE_URL}/${apiEndpoint}`, { courseId, description: newItem })
         .then((res) => setItems([...items, res.data]))
         .catch((err) => console.error(err));
       setNewItem("");
@@ -27,12 +27,12 @@ const EditableList = ({ title, description, apiEndpoint, items, setItems }) => {
     const updatedItems = [...items];
     updatedItems[index].description = value;
     setItems(updatedItems);
-    axios.patch(`${API_BASE_URL}/${apiEndpoint}/${updatedItems[index].id}`, { description: value })
+    axios.patch(`${configs.API_BASE_URL}/${apiEndpoint}/${updatedItems[index].id}`, { description: value })
       .catch((err) => console.error(err));
   };
 
   const handleDeleteItem = (index) => {
-    axios.delete(`${API_BASE_URL}/${apiEndpoint}/${items[index].id}`)
+    axios.delete(`${configs.API_BASE_URL}/${apiEndpoint}/${items[index].id}`)
       .then(() => setItems(items.filter((_, i) => i !== index)))
       .catch((err) => console.error(err));
   };

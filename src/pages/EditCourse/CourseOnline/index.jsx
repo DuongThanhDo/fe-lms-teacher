@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import CourseValidationModal from "../../../components/CourseValidationModal";
 import { CourseStatus } from "../../../utils/enums";
+import { configs } from "../../../configs";
 
 const { TabPane } = Tabs;
 
@@ -23,7 +24,7 @@ const CourseOnline = () => {
   const fetchCourseDetails = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/courses/${courseId}`
+        `${configs.API_BASE_URL}/courses/${courseId}`
       );
       const data = response.data;
       setCourse(data);
@@ -41,7 +42,7 @@ const CourseOnline = () => {
   const fetchCourseData = async (courseId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/courses/all-info/${courseId}`
+        `${configs.API_BASE_URL}/courses/all-info/${courseId}`
       );
       return response.data;
     } catch (error) {
@@ -53,7 +54,7 @@ const CourseOnline = () => {
   const submitCourse = async (courseId) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/courses/${courseId}`,
+        `${configs.API_BASE_URL}/courses/${courseId}`,
         {
           status: CourseStatus.PENDING,
         }
