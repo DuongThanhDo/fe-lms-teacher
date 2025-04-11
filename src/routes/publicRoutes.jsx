@@ -20,5 +20,5 @@ export const publicRoutes = [
     { path: configs.routes.courses, component: Courses, },
     { path: configs.routes.editCourse, component: EditCourse, },
     { path: configs.routes.viewCourse, component: ViewCourse, layout: null},
-    { path: configs.routes.LectureCourse, component: Lecture, layout: CourseLayout},
+    { path: configs.routes.lectureCourse, component: Lecture, layout: CourseLayout},
 ];

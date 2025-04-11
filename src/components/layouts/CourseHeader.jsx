@@ -15,3 +15,4 @@ const CourseHeader = ({ course, navigator }) => {
 };
 
 export default CourseHeader;
+

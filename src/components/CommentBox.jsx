@@ -24,7 +24,9 @@ function CommentBox({ contentType, contentId }) {
 
     const fetchUserAvatar = async () => {
       try {
-        const response = await fetch(`${configs.API_BASE_URL}/user-profiles/${user.id}`);
+        const response = await fetch(
+          `${configs.API_BASE_URL}/user-profiles/${user.id}`
+        );
         if (!response.ok) throw new Error("Không thể tải ảnh đại diện.");
         const data = await response.json();
         setInfoUser(data);
@@ -55,22 +57,27 @@ function CommentBox({ contentType, contentId }) {
   }, [contentType, contentId]);
 
   const fetchComments = async () => {
-    const res = await axios.get(`${configs.API_BASE_URL}/comments/${contentType}/${contentId}`);
+    const res = await axios.get(
+      `${configs.API_BASE_URL}/comments/${contentType}/${contentId}`
+    );
     setComments(res.data);
   };
 
   const handleSubmit = async () => {
     if (!content.trim()) return;
 
-    const res = await axios.post(`${configs.API_BASE_URL}/comments`, {
-      content,
-      user_id: user.id,
-      commentable_type: contentType,
-      commentable_id: contentId,
-    });
+    try {
+      await axios.post(`${configs.API_BASE_URL}/comments`, {
+        content,
+        user_id: user.id,
+        commentable_type: contentType,
+        commentable_id: contentId,
+      });
 
-    setComments((prev) => [...prev, res.data]);
-    setContent("");
+      setContent("");
+    } catch (error) {
+      console.error("Lỗi khi gửi bình luận:", error);
+    }
   };
 
   const renderComments = (list, parentId = null) =>
@@ -106,6 +113,12 @@ function CommentBox({ contentType, contentId }) {
           placeholder="Nhập bình luận của bạn..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSubmit();
+            }
+          }}
         />
         <Button type="primary" onClick={handleSubmit}>
           Bình luận
