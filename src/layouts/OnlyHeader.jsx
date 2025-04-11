@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container } from 'react-bootstrap';
-import Header from '../components/Layout/Header';
+import Header from '../components/layouts/Header';
 
 const OnlyHeader = ({ children }) => {
     return (

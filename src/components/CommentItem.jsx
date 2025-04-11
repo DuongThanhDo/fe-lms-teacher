@@ -18,8 +18,17 @@ function CommentItem({
   const [replyContent, setReplyContent] = useState("");
   const [showReplies, setShowReplies] = useState(false);
 
+  // Lấy tất cả phản hồi thuộc comment gốc này
   const replies = allComments.filter((c) => c.parent_id === comment.id);
 
+  // Hàm đệ quy tìm comment gốc
+  const findRootCommentId = (commentId) => {
+    const current = allComments.find((c) => c.id === commentId);
+    if (!current?.parent_id) return commentId;
+    return findRootCommentId(current.parent_id);
+  };
+
+  // Gửi phản hồi
   const handleReply = async () => {
     if (!replyContent.trim()) return;
 
@@ -28,10 +37,13 @@ function CommentItem({
       user_id: user.id,
       commentable_type: contentType,
       commentable_id: contentId,
-      parent_id: comment.id,
+      parent_id: findRootCommentId(comment.id),
     });
 
-    setAllComments((prev) => [...prev, res.data]);
+    // Cập nhật lại danh sách comment nếu muốn
+    // const newComment = res.data;
+    // setAllComments([...allComments, newComment]);
+
     setReplyContent("");
     setShowReplyInput(false);
     setShowReplies(true);
@@ -62,7 +74,12 @@ function CommentItem({
           <span>{dayjs(comment.updated_at).fromNow()}</span>
           <button
             className="btn btn-sm text-primary p-0"
-            onClick={() => setShowReplyInput(!showReplyInput)}
+            onClick={() => {
+              const mentionName =
+                comment.user?.profile?.name || `Thành viên ẩn danh ${comment.user?.id}`;
+              setReplyContent(`@${mentionName} `);
+              setShowReplyInput(true);
+            }}
           >
             Phản hồi
           </button>
@@ -90,6 +107,12 @@ function CommentItem({
               value={replyContent}
               placeholder="Viết phản hồi..."
               onChange={(e) => setReplyContent(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleReply();
+                }
+              }}
               className="me-2"
             />
             <Button size="small" onClick={handleReply}>

@@ -3,10 +3,10 @@ import { Button, Layout } from "antd";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "../assets/css/CourseLayout.css";
-import SidebarCourse from "../components/Layout/SidebarCourse";
-import CourseHeader from "../components/Layout/CourseHeader";
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 import { configs } from "../configs";
+import SidebarCourse from "../components/layouts/SidebarCourse";
+import CourseHeader from "../components/layouts/CourseHeader";
 
 const { Content, Footer } = Layout;
 const SIDEBAR_WIDTH = 320;
