@@ -1,7 +1,5 @@
 import { configs } from "../configs";
 import CourseLayout from "../layouts/CourseLayout";
-import OnlyHeader from "../layouts/OnlyHeader";
-import About from "../pages/About";
 import ChangePassword from "../pages/ChangePassword";
 import Courses from "../pages/Courses";
 import Dashboard from "../pages/Dashboard";
@@ -11,10 +9,9 @@ import Login from "../pages/Login";
 import Profile from "../pages/Profile";
 import ViewCourse from "../pages/ViewCourse";
 
-export const publicRoutes = [
+export const AllRoutes = [
     { path: configs.routes.dashboard, component: Dashboard, },
     { path: configs.routes.login, component: Login, layout: null },
-    { path: configs.routes.about, component: About, },
     { path: configs.routes.changePassword, component: ChangePassword, },
     { path: configs.routes.profile, component: Profile, },
     { path: configs.routes.courses, component: Courses, },
