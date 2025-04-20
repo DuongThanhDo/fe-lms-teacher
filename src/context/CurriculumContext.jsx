@@ -83,7 +83,7 @@ export const CurriculumProvider = ({ children }) => {
     try {
       switch (type) {
         case "lecture":
-          response = await axios.post("${configs.API_BASE_URL}/lectures", {
+          response = await axios.post(`${configs.API_BASE_URL}/lectures`, {
             chapterId: Number(sectionId),
             title,
             order,
@@ -93,6 +93,11 @@ export const CurriculumProvider = ({ children }) => {
           console.log("API coding");
           break;
         case "quiz":
+          response = await axios.post(`${configs.API_BASE_URL}/quizSQL`, {
+            chapterId: Number(sectionId),
+            name: title,
+            order,
+          });
           console.log("API quiz");
           break;
         default:

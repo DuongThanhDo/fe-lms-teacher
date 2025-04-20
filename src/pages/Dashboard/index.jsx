@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Layout, Card, Table, List } from "antd";
 import { Line, Bar } from "react-chartjs-2";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -9,6 +9,9 @@ import {
   FileTextOutlined,
 } from "@ant-design/icons";
 import { Chart, registerables } from "chart.js";
+import { useNavigate } from "react-router-dom";
+import { configs } from "../../configs";
+import { useSelector } from "react-redux";
 
 Chart.register(...registerables);
 
@@ -54,6 +57,14 @@ const schedule = [
 ];
 
 const Dashboard = () => {
+  const authState = useSelector((state) => state.auth);
+  const login = authState.isLoggedIn;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!login) navigate(configs.routes.login);
+  }, [])
+
   return (
     <Layout>
       <Content className="container mt-4">
