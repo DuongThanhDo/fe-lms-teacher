@@ -1,86 +1,108 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import QuizQuestionForm from "./QuizQuestionForm";
 import QuizQuestionList from "./QuizQuestionList";
+import { configs } from "../configs";
+import axios from "axios";
+import { message } from "antd";
 
-const QuizQuestionManager = ({ quizId, showForm }) => {
-  const [questions, setQuestions] = useState([]);
+const QuizQuestionManager = ({ quizId, showForm, setShowForm }) => {
+  const [questionData, setQuestionData] = useState({
+    id: undefined,
+    name: "",
+    explain: "",
+    answers: [{ id: undefined, value: "", correct: false }],
+  });
   const [isEditingIndex, setIsEditingIndex] = useState(null);
-  const [questionText, setQuestionText] = useState("");
-  const [answers, setAnswers] = useState([{ text: "", correct: false }]);
+  const [questions, setQuestions] = useState([]);
 
   const resetForm = () => {
-    setQuestionText("");
-    setAnswers([{ text: "", correct: false }]);
+    setQuestionData({
+      id: undefined,
+      name: "",
+      explain: "",
+      answers: [{ id: undefined, value: "", correct: false }],
+    });
     setIsEditingIndex(null);
   };
 
-  const handleSave = () => {
-    const trimmedAnswers = answers.filter((a) => a.text.trim() !== "");
-    const newQuestion = {
-      question: questionText.trim(),
-      answers: trimmedAnswers,
-    };
-
-    if (isEditingIndex !== null) {
-      const updated = [...questions];
-      updated[isEditingIndex] = newQuestion;
-      setQuestions(updated);
-    } else {
-      setQuestions([...questions, newQuestion]);
-    }
-
+  const handleSaveSuccess = () => {
     resetForm();
+    loadQuestions();
   };
+
+  const loadQuestions = async () => {
+    try {
+      const response = await axios.get(
+        `${configs.API_BASE_URL}/quizzes/${quizId}/questions`
+      );
+      const data = await response.data;
+      setQuestions(data.data || []);
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+    }
+  };
+
+  const loadAnswersForQuestion = async (questionId) => {
+    try {
+      const response = await axios.get(
+        `${configs.API_BASE_URL}/quizzes/${quizId}/questions/${questionId}/answers`
+      );
+      return response.data.data || [];
+    } catch (error) {
+      console.error("Error fetching answers:", error);
+      return [];
+    }
+  };
+
+  const onDelete = async (index) => {
+    try {
+      const questionToDelete = questions[index];
+      await axios.delete(
+        `${configs.API_BASE_URL}/quizzes/${quizId}/questions/${questionToDelete.id}`
+      );
+      const updated = [...questions];
+      message.success("Xóa thành công câu hỏi.");
+      updated.splice(index, 1);
+      setQuestions(updated);
+    } catch (error) {
+      console.error("Error deleting question:", error);
+      message.error("Có lỗi xảy ra khi xóa câu hỏi.");
+    }
+  };
+
+  useEffect(() => {
+    if (quizId) {
+      loadQuestions();
+    }
+  }, [quizId]);
 
   return (
     <div>
       {showForm && (
         <QuizQuestionForm
-          questionText={questionText}
-          answers={answers}
+          quizId={quizId}
+          questionData={questionData}
           isEditing={isEditingIndex !== null}
-          onQuestionChange={setQuestionText}
-          onAnswerChange={(idx, text) => {
-            const updated = [...answers];
-            updated[idx].text = text;
-            setAnswers(updated);
-          }}
-          onAnswerToggleCorrect={(idx, checked) => {
-            const updated = [...answers];
-            updated[idx].correct = checked;
-            setAnswers(updated);
-          }}
-          onAddAnswer={() => setAnswers([...answers, { text: "", correct: false }])}
-          onRemoveAnswer={(idx) => {
-            const updated = [...answers];
-            updated.splice(idx, 1);
-            setAnswers(updated);
-          }}
+          onSaveSuccess={handleSaveSuccess}
           onCancelEdit={resetForm}
-          onSave={handleSave}
-          onSelectCorrectAnswer={(selectedIdx) => {
-            const updated = answers.map((a, idx) => ({
-              ...a,
-              correct: idx === selectedIdx,
-            }));
-            setAnswers(updated);
-          }}
         />
       )}
 
       <QuizQuestionList
         questions={questions}
-        onEdit={(index) => {
+        onEdit={async (index) => {
           const q = questions[index];
-          setQuestionText(q.question);
-          setAnswers(q.answers);
+          const answers = await loadAnswersForQuestion(q.id);
+          setQuestionData({
+            id: q.id,
+            name: q.name,
+            explain: q.explain,
+            answers: answers,
+          });
           setIsEditingIndex(index);
+          setShowForm(true);
         }}
-        onDelete={(index) => {
-          const updated = [...questions];
-          updated.splice(index, 1);
-          setQuestions(updated);
-        }}
+        onDelete={onDelete}
       />
     </div>
   );

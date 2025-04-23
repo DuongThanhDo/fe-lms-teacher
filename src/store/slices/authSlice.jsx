@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// Khởi tạo giá trị mặc định từ localStorage (nếu có)
 const initialState = {
   userInfo: JSON.parse(localStorage.getItem('userInfo')) || null,
   token: localStorage.getItem('token') || null,

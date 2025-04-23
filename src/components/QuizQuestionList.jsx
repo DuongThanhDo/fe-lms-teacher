@@ -2,7 +2,7 @@ import React from "react";
 import { List, Button, Modal } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-const QuizQuestionList = ({ questions, onEdit, onDelete }) => {
+const QuizQuestionList = ({ questions = [], onEdit, onDelete }) => {
   const handleDelete = (index) => {
     Modal.confirm({
       title: "Xóa câu hỏi này?",
@@ -16,7 +16,7 @@ const QuizQuestionList = ({ questions, onEdit, onDelete }) => {
 
   return (
     <>
-      <h3>Danh sách câu hỏi</h3>
+      <h4>Danh sách câu hỏi</h4>
       <List
         bordered
         dataSource={questions}
@@ -24,18 +24,16 @@ const QuizQuestionList = ({ questions, onEdit, onDelete }) => {
           <List.Item
             actions={[
               <Button icon={<EditOutlined />} size="small" onClick={() => onEdit(index)} />,
-              <Button icon={<DeleteOutlined />} size="small" danger onClick={() => handleDelete(index)} />,
+              <Button
+                icon={<DeleteOutlined />}
+                size="small"
+                danger
+                onClick={() => handleDelete(index)}
+              />,
             ]}
           >
             <div style={{ width: "100%" }}>
-              <strong>{q.question}</strong>
-              <ul style={{ marginTop: 4 }}>
-                {q.answers.map((ans, i) => (
-                  <li key={i} style={{ color: ans.correct ? "green" : "black" }}>
-                    {ans.text} {ans.correct && "(Đúng)"}
-                  </li>
-                ))}
-              </ul>
+              <strong>{index + 1}.</strong> {q.name}
             </div>
           </List.Item>
         )}
