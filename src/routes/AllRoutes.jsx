@@ -7,6 +7,7 @@ import EditCourse from "../pages/EditCourse";
 import Lecture from "../pages/Lecture";
 import Login from "../pages/Login";
 import Profile from "../pages/Profile";
+import Quiz from "../pages/Quiz";
 import ViewCourse from "../pages/ViewCourse";
 
 export const AllRoutes = [
@@ -18,4 +19,5 @@ export const AllRoutes = [
     { path: configs.routes.editCourse, component: EditCourse, },
     { path: configs.routes.viewCourse, component: ViewCourse, layout: null},
     { path: configs.routes.lectureCourse, component: Lecture, layout: CourseLayout},
+    { path: configs.routes.quizCourse, component: Quiz, layout: CourseLayout},
 ];

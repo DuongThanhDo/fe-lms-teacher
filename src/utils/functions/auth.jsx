@@ -1,4 +1,3 @@
-// Lưu phiên vào localStorage
 function setSession(token, minutes) {
     const now = new Date();
     const expirationTime = now.getTime() + minutes * 60 * 1000;

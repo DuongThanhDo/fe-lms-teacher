@@ -20,7 +20,7 @@ const QuizItem = ({ quiz, quizIndex }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [title, setTitle] = useState(quiz.title);
   const [hovered, setHovered] = useState(false);
-  const [showQuestionForm, setShowQuestionForm] = useState(false); // 👉 chỉ điều khiển form
+  const [showQuestionForm, setShowQuestionForm] = useState(false); 
 
   const deleteQuiz = async (quizId) => {
     try {
@@ -139,7 +139,7 @@ const QuizItem = ({ quiz, quizIndex }) => {
             {showQuestionForm ? "Ẩn form" : "Tạo câu hỏi"}
           </Button>
 
-          <QuizQuestionManager quizId={quiz.id} showForm={showQuestionForm} />
+          <QuizQuestionManager quizId={quiz.quizFB_id} showForm={showQuestionForm} setShowForm={setShowQuestionForm} />
         </div>
       </Panel>
     </Collapse>
