@@ -14,6 +14,7 @@ const Quiz = () => {
   const [quizFB, setQuizFB] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [isQuizStarted, setIsQuizStarted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchDataQuiz = async () => {
     try {
@@ -25,6 +26,8 @@ const Quiz = () => {
       setCorrectAnswers(0);
     } catch (error) {
       message.error('Lỗi lấy câu hỏi');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -39,6 +42,25 @@ const Quiz = () => {
     setCurrentIndex((prev) => prev + 1);
   };
 
+  if (isLoading) {
+    return (
+      <Card style={{ maxWidth: 600, margin: "auto", marginTop: 40 }}>
+        <Title level={4}>Đang tải câu hỏi...</Title>
+      </Card>
+    );
+  }
+  
+  if (!isLoading && questions.length === 0) {
+    return (
+      <Card style={{ maxWidth: 600, margin: "auto", marginTop: 40 }}>
+        <Title level={4}>Quiz này chưa có câu hỏi nào.</Title>
+        <Button type="primary" onClick={() => window.history.back()}>
+          Quay lại
+        </Button>
+      </Card>
+    );
+  }
+
   if (currentIndex >= questions.length) {
     return (
       <Card style={{ maxWidth: 600, margin: 'auto', marginTop: 40 }}>
@@ -50,8 +72,6 @@ const Quiz = () => {
       </Card>
     );
   }
-
-  if (questions.length === 0) return null;
 
   return (
     <Card style={{ maxWidth: 600, margin: 'auto', marginTop: 40 }}>
