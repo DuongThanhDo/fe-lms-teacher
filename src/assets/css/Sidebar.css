@@ -29,3 +29,7 @@
   background-color: #1d8381 !important;
   color: white !important;
 }
+
+.ant-layout-sider-trigger {
+  display: none !important;
+}
