@@ -36,9 +36,9 @@ const CourseOverview = () => {
         form.setFieldsValue({
           name: data.name || "",
           description: data.description || "",
-          category: data.category?.id || "",
+          category: data.category?.id || null,
           price: data.price || "",
-          certificate: data.certificate?.id || "",
+          certificate: data.certificate?.id || null,
         });
       } catch (error) {
         console.error("Lỗi tải thông tin khóa học:", error);
@@ -80,6 +80,7 @@ const CourseOverview = () => {
         </Form.Item>
         <Form.Item label="Danh mục" name="category">
           <Select
+            allowClear
             onChange={(value) =>
               form.setFieldsValue({ category: Number(value) })
             }
@@ -94,6 +95,8 @@ const CourseOverview = () => {
         </Form.Item>
         <Form.Item label="Chứng chỉ" name="certificate">
           <Select
+            allowClear
+            placeholder="Chọn chứng chỉ"
             onChange={(value) =>
               form.setFieldsValue({ certificate: Number(value) })
             }

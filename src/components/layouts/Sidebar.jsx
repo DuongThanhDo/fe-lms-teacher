@@ -20,10 +20,6 @@ const Sidebar = () => {
   const getActiveKey = () => {
     if (location.pathname.startsWith(configs.routes.courses))
       return configs.routes.courses;
-    if (location.pathname.startsWith(configs.routes.students))
-      return configs.routes.students;
-    if (location.pathname.startsWith(configs.routes.reviews))
-      return configs.routes.reviews;
     if (location.pathname.startsWith(configs.routes.messages))
       return configs.routes.messages;
     return "/";
@@ -52,16 +48,6 @@ const Sidebar = () => {
         <Menu.Item key={configs.routes.courses} icon={<BookOutlined />}>
           <Link style={{ textDecoration: "none" }} to={configs.routes.courses}>
             Khóa học
-          </Link>
-        </Menu.Item>
-        <Menu.Item key={configs.routes.students} icon={<TeamOutlined />}>
-          <Link style={{ textDecoration: "none" }} to={configs.routes.students}>
-            Học viên
-          </Link>
-        </Menu.Item>
-        <Menu.Item key={configs.routes.reviews} icon={<StarOutlined />}>
-          <Link style={{ textDecoration: "none" }} to={configs.routes.reviews}>
-            Đánh giá
           </Link>
         </Menu.Item>
         <Menu.Item key={configs.routes.messages} icon={<MessageOutlined />}>

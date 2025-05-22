@@ -13,6 +13,6 @@ export const routes = {
     codeCourse: '/courses/:courseId/code/:codeId',
     detailCourse: '/courses/:id',
     messages: '/messages',
-    students: '/students',
+    students: '/students/:courseId',
     reviews: '/reviews',
 };
