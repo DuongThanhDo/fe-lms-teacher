@@ -24,7 +24,7 @@ const Courses = () => {
   const fetchCourses = async () => {
     try {
       const response = await axios.get(
-        `${configs.API_BASE_URL}/courses/teacher`,
+        `${configs.API_BASE_URL}/courses/search`,
         {
           params: { teacherId: user.id, searchValue, category, type, status },
         }
@@ -46,10 +46,10 @@ const Courses = () => {
 
   return (
     <Container className="my-4">
-      <div className="w-100 d-flex flex-wrap align-items-center justify-content-between gap-2 py-3 bg-white rounded mb-3">
+      <div className="w-100 d-flex flex-wrap align-items-center gap-2 py-3 bg-white rounded mb-3">
         <Input
           placeholder="Tìm kiếm"
-          style={{ maxWidth: "50%" }}
+          style={{ flex: 1, minWidth: "200px" }}
           allowClear
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
@@ -57,20 +57,21 @@ const Courses = () => {
 
         <Select
           placeholder="Danh mục"
-          style={{ minWidth: "200px" }}
+          style={{ width: "200px" }}
           value={category}
           onChange={(value) => setCategory(value)}
           allowClear
         >
-          {categories.map((category) => 
-            <Option value={category.id}>{category.name}</Option>
-          )}
-
+          {categories.map((category) => (
+            <Option key={category.id} value={category.id}>
+              {category.name}
+            </Option>
+          ))}
         </Select>
 
         <Select
           placeholder="Loại"
-          style={{ minWidth: "100px" }}
+          style={{ width: "100px" }}
           value={type}
           onChange={(value) => setType(value)}
           allowClear
@@ -81,7 +82,7 @@ const Courses = () => {
 
         <Select
           placeholder="Trạng thái"
-          style={{ minWidth: "100px" }}
+          style={{ width: "120px" }}
           value={status}
           onChange={(value) => setStatus(value)}
           allowClear
@@ -96,11 +97,13 @@ const Courses = () => {
         <Button
           type="primary"
           icon={<SearchOutlined />}
-          className="!ml-2"
+          style={{ width: "100px" }}
           onClick={handleSearch}
-        />
+        >
+          Tìm
+        </Button>
 
-        <div className="bg-teal-600 flex items-center !ml-2">
+        <div style={{ width: "150px" }}>
           <ModalCreateCourse />
         </div>
       </div>

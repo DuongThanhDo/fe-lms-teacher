@@ -105,7 +105,7 @@ const CourseOnline = () => {
         }}
       >
         <h2>Thông tin khóa học</h2>
-        {course.status == CourseStatus.DRAFT && (
+        {(course.status == CourseStatus.DRAFT || course.status == CourseStatus.REJECTED) && (
           <Button
             type="primary"
             style={{ marginTop: 20 }}
