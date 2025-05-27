@@ -76,7 +76,9 @@ const Dashboard = () => {
         label: "Thống kê đăng ký",
         data: chartData.map((item) => item.revenue),
         borderColor: "#1890ff",
-        fill: false,
+        backgroundColor: "rgba(24, 144, 255, 0.1)",
+        fill: true,
+        tension: 0.4,
       },
     ],
   };
@@ -84,7 +86,6 @@ const Dashboard = () => {
   return (
     <Layout>
       <Content className="container mt-4">
-        {/* Statistics */}
         <div className="row mb-4">
           {statsData.map((stat, index) => (
             <div key={index} className="col-md-3">
@@ -98,7 +99,6 @@ const Dashboard = () => {
           ))}
         </div>
 
-        {/* Chart */}
         <div className="row mb-4">
           <div className="col-md-12">
             <Card title="Lượt đăng ký khóa học trong năm">
