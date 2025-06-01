@@ -1,8 +1,11 @@
 import React from "react";
 import { List, Button, Modal } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { CourseStatus } from "../utils/enums";
+import { useCurriculum } from "../context/CurriculumContext";
 
 const QuizQuestionList = ({ questions = [], onEdit, onDelete }) => {
+  const { course } = useCurriculum();
   const handleDelete = (index) => {
     Modal.confirm({
       title: "Xóa câu hỏi này?",
@@ -22,15 +25,25 @@ const QuizQuestionList = ({ questions = [], onEdit, onDelete }) => {
         dataSource={questions}
         renderItem={(q, index) => (
           <List.Item
-            actions={[
-              <Button icon={<EditOutlined />} size="small" onClick={() => onEdit(index)} />,
-              <Button
-                icon={<DeleteOutlined />}
-                size="small"
-                danger
-                onClick={() => handleDelete(index)}
-              />,
-            ]}
+            actions={
+              course?.status != CourseStatus.PUBLISHED
+                ? [
+                    <Button
+                      key="edit"
+                      icon={<EditOutlined />}
+                      size="small"
+                      onClick={() => onEdit(index)}
+                    />,
+                    <Button
+                      key="delete"
+                      icon={<DeleteOutlined />}
+                      size="small"
+                      danger
+                      onClick={() => handleDelete(index)}
+                    />,
+                  ]
+                : []
+            }
           >
             <div style={{ width: "100%" }}>
               <strong>{index + 1}.</strong> {q.name}

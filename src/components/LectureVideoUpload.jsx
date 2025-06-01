@@ -3,8 +3,11 @@ import axios from "axios";
 import { Button, Upload, Row, Col, message } from "antd";
 import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import { configs } from "../configs";
+import { CourseStatus } from "../utils/enums";
+import { useCurriculum } from "../context/CurriculumContext";
 
 const LectureVideoUpload = ({ lecture, onUpdateVideo }) => {
+  const { course } = useCurriculum();
   const [videoUrl, setVideoUrl] = useState(lecture?.video?.file_url || "");
   const [fileName, setFileName] = useState(lecture?.video?.file_name || "");
   const [videoKey, setVideoKey] = useState(Date.now());
@@ -77,7 +80,7 @@ const LectureVideoUpload = ({ lecture, onUpdateVideo }) => {
               <strong>Tên file:</strong> {fileName}
             </p>
           </Col>
-          <Col span={10} style={{ textAlign: "right" }}>
+          {course?.status != CourseStatus.PUBLISHED && (<Col span={10} style={{ textAlign: "right" }}>
             <Upload showUploadList={false} beforeUpload={handleUpload}>
               <Button
                 type="primary"
@@ -87,26 +90,14 @@ const LectureVideoUpload = ({ lecture, onUpdateVideo }) => {
                 {loading ? "Đang tải..." : "Thay thế video"}
               </Button>
             </Upload>
-            {/* <Button
-              type="default"
-              danger
-              icon={<DeleteOutlined />}
-              onClick={() => {
-                setVideoUrl("");
-                setFileName("");
-              }}
-              style={{ marginLeft: 10 }}
-            >
-              Xóa video
-            </Button> */}
-          </Col>
+          </Col>)}
         </Row>
       ) : (
-        <Upload showUploadList={false} beforeUpload={handleUpload}>
+        course?.status != CourseStatus.PUBLISHED && (<Upload showUploadList={false} beforeUpload={handleUpload}>
           <Button type="primary" icon={<UploadOutlined />} loading={loading}>
             {loading ? "Đang tải..." : "Thêm video"}
           </Button>
-        </Upload>
+        </Upload>)
       )}
     </div>
   );

@@ -10,6 +10,7 @@ export const useCurriculum = () => useContext(CurriculumContext);
 export const CurriculumProvider = ({ children }) => {
   const { id: courseId } = useParams();
   const [sections, setSections] = useState([]);
+  const [course, setCourse] = useState([]);
 
   const fetchContentCourse = async () => {
     try {
@@ -23,9 +24,22 @@ export const CurriculumProvider = ({ children }) => {
     }
   };
 
+  const fetchCourse = async () => {
+    try {
+      const response = await axios.get(`${configs.API_BASE_URL}/courses/${courseId}`);
+      setCourse(response.data);
+    } catch (error) {
+      console.error(
+        "Lỗi khi lấy chapters:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
   useEffect(() => {
     if (!courseId) return;
     fetchContentCourse();
+    fetchCourse();
   }, [courseId]);
 
   const addSection = async (title) => {
@@ -115,7 +129,7 @@ export const CurriculumProvider = ({ children }) => {
 
   return (
     <CurriculumContext.Provider
-      value={{ sections, addSection, deleteSection, editSection, addItem, fetchContentCourse }}
+      value={{ sections, course, addSection, deleteSection, editSection, addItem, fetchContentCourse }}
     >
       {children}
     </CurriculumContext.Provider>

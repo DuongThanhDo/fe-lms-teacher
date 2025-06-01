@@ -12,12 +12,13 @@ import { useCurriculum } from "../context/CurriculumContext";
 import axios from "axios";
 import LectureVideoUpload from "./LectureVideoUpload";
 import { configs } from "../configs";
+import { CourseStatus } from "../utils/enums";
 
 const { Panel } = Collapse;
 const { confirm } = Modal;
 
 const LectureItem = ({ lecture, lectureIndex }) => {
-  const { fetchContentCourse } = useCurriculum();
+  const { fetchContentCourse, course } = useCurriculum();
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [title, setTitle] = useState(lecture.title);
   const [isEditingDesc, setIsEditingDesc] = useState(false);
@@ -113,7 +114,7 @@ const LectureItem = ({ lecture, lectureIndex }) => {
               </span>
             )}
 
-            {hovered && !isEditingTitle && (
+            {hovered && !isEditingTitle && course?.status != CourseStatus.PUBLISHED && (
               <div>
                 <Button
                   size="small"
@@ -183,13 +184,13 @@ const LectureItem = ({ lecture, lectureIndex }) => {
               </Button>
             </>
           ) : (
-            <Button
+            course?.status != CourseStatus.PUBLISHED && (<Button
               type="dashed"
               icon={<EditOutlined />}
               onClick={() => setIsEditingDesc(true)}
             >
               Thêm mô tả
-            </Button>
+            </Button>)
           )}
         </div>
       </Panel>

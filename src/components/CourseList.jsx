@@ -41,9 +41,7 @@ const CourseList = ({ courses, fetchCourses }) => {
 
   const handleDeleteCourse = async (courseId) => {
     try {
-      const response = await axios.delete(
-        `${configs.API_BASE_URL}/courses/${courseId}`
-      );
+      await axios.delete(`${configs.API_BASE_URL}/courses/${courseId}`);
       message.success("Khóa học đã được xóa thành công");
       fetchCourses();
     } catch (error) {
@@ -74,6 +72,15 @@ const CourseList = ({ courses, fetchCourses }) => {
     } else if (key === "delete") {
       confirmDeleteCourse(record.id);
     }
+  };
+
+  const showRejectionReason = (reason) => {
+    Modal.info({
+      title: "Lý do bị từ chối",
+      content: <div>{reason || "Không có lý do cụ thể"}</div>,
+      okText: "Đóng",
+      centered: true,
+    });
   };
 
   const columns = [
@@ -126,8 +133,8 @@ const CourseList = ({ courses, fetchCourses }) => {
       dataIndex: "price",
       key: "price",
       render: (price) =>
-        price !== null && price !== undefined && price !== 0 && price != "0.00"
-          ? `${price.toLocaleString()} VND`
+        price !== null && price !== undefined && price !== 0 && price !== "0.00"
+          ? `${Number(price).toLocaleString()} VND`
           : "Miễn phí",
     },
     {
@@ -144,9 +151,20 @@ const CourseList = ({ courses, fetchCourses }) => {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (status) => (
-        <Tag color={statusColors[status]}>{statusLabels[status]}</Tag>
-      ),
+      render: (status, record) => {
+        if (status === CourseStatus.REJECTED) {
+          return (
+            <Tag
+              color={statusColors[status]}
+              style={{ cursor: "pointer" }}
+              onClick={() => showRejectionReason(record.rejectionReason)}
+            >
+              {statusLabels[status]}
+            </Tag>
+          );
+        }
+        return <Tag color={statusColors[status]}>{statusLabels[status]}</Tag>;
+      },
     },
     {
       title: "Hành động",
@@ -160,11 +178,7 @@ const CourseList = ({ courses, fetchCourses }) => {
               <Menu.Item key="view" icon={<EyeOutlined />}>
                 Xem chi tiết
               </Menu.Item>
-              <Menu.Item
-                key="edit"
-                icon={<EditOutlined />}
-                style={{ color: "#1890ff" }}
-              >
+              <Menu.Item key="edit" icon={<EditOutlined />} style={{ color: "#1890ff" }}>
                 Sửa khóa học
               </Menu.Item>
               {record.status === CourseStatus.DRAFT && (

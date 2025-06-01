@@ -11,12 +11,13 @@ import { useCurriculum } from "../context/CurriculumContext";
 import axios from "axios";
 import { configs } from "../configs";
 import QuizQuestionManager from "./QuizQuestionManager";
+import { CourseStatus } from "../utils/enums";
 
 const { Panel } = Collapse;
 const { confirm } = Modal;
 
 const QuizItem = ({ quiz, quizIndex }) => {
-  const { fetchContentCourse } = useCurriculum();
+  const { fetchContentCourse, course } = useCurriculum();
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [title, setTitle] = useState(quiz.title);
   const [hovered, setHovered] = useState(false);
@@ -102,7 +103,7 @@ const QuizItem = ({ quiz, quizIndex }) => {
                 <strong>Trắc nghiệm {quizIndex + 1}:</strong> {title}
               </span>
             )}
-            {hovered && !isEditingTitle && (
+            {hovered && !isEditingTitle && course?.status != CourseStatus.PUBLISHED && (
               <div>
                 <Button
                   size="small"
@@ -130,14 +131,14 @@ const QuizItem = ({ quiz, quizIndex }) => {
         key={quiz.id}
       >
         <div style={{ backgroundColor: "rgba(0, 0, 0, 0.028)", padding: 24 }}>
-          <Button
+          {course?.status != CourseStatus.PUBLISHED && (<Button
             type="dashed"
             icon={<EditOutlined />}
             onClick={() => setShowQuestionForm(!showQuestionForm)}
             style={{ marginBottom: 16 }}
           >
             {showQuestionForm ? "Ẩn form" : "Tạo câu hỏi"}
-          </Button>
+          </Button>)}
 
           <QuizQuestionManager quizId={quiz.quizFB_id} showForm={showQuestionForm} setShowForm={setShowQuestionForm} />
         </div>

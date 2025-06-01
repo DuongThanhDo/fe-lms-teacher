@@ -16,51 +16,99 @@ const QuizQuestionForm = ({
   onSaveSuccess,
   onCancelEdit,
 }) => {
+  const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
   const [question, setQuestion] = useState({
     id: undefined,
     name: "",
     explain: "",
-    answers: [{ id: undefined, value: "", correct: false }]
+    answers: [{ id: undefined, value: "", correct: false }],
   });
 
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
-    console.log("questionData:"+questionData);
-    
     setQuestion({
       id: questionData?.id,
       name: questionData?.name || "",
       explain: questionData?.explain || "",
       answers:
-        isEditing ? questionData?.answers?.map((a) => ({
-          id: a.id,
-          value: a.value,
-          correct: a.correct,
-        })) : Array(4).fill(null).map(() => ({ id: undefined, value: "", correct: false })),
+        isEditing && questionData?.answers?.length === 4
+          ? questionData.answers.map((a) => ({
+              id: a.id,
+              value: a.value,
+              correct: a.correct,
+            }))
+          : Array(4)
+              .fill(null)
+              .map(() => ({ id: undefined, value: "", correct: false })),
     });
   }, [questionData]);
-  
+
+  const handleGenerateFromAI = async () => {
+    if (!description.trim()) {
+      message.error("Vui lòng nhập mô tả để tạo câu hỏi với AI");
+      return;
+    }
+    setAiLoading(true);
+    try {
+      const res = await axios.post(
+        `${configs.API_BASE_URL}/openai/questions`,
+        {
+          description: description.trim(),
+        }
+      );
+
+      const aiQuestion = res.data;
+
+      if (
+        !aiQuestion ||
+        !aiQuestion.name ||
+        !Array.isArray(aiQuestion.answers) ||
+        aiQuestion.answers.length !== 4
+      ) {
+        message.error("Dữ liệu câu hỏi trả về không đúng định dạng");
+        return;
+      }
+
+      setQuestion({
+        id: undefined,
+        name: aiQuestion.name,
+        explain: aiQuestion.explain || "",
+        answers: aiQuestion.answers.map((a, idx) => ({
+          id: undefined,
+          value: a.value,
+          correct: a.correct,
+        })),
+      });
+      message.success("Tạo câu hỏi tự động thành công!");
+    } catch (error) {
+      console.error("Lỗi khi gọi AI tạo câu hỏi:", error);
+      message.error("Có lỗi khi tạo câu hỏi từ AI");
+    } finally {
+      setAiLoading(false);
+      setDescription("");
+    }
+  };
 
   const handleSave = async () => {
     if (!question.name.trim()) return;
-  
-    const validAnswers = question.answers.filter(a => a.value.trim() !== "");
-  
+
+    const validAnswers = question.answers.filter((a) => a.value.trim() !== "");
+
     if (validAnswers.length < 2) {
       message.error("Câu hỏi phải có ít nhất 2 đáp án hợp lệ!");
       return;
     }
-  
+
     if (!validAnswers.some((a) => a.correct)) {
       message.error("Phải chọn ít nhất 1 đáp án đúng!");
       return;
     }
-  
+
     setLoading(true);
     try {
       let questionId;
-  
+
       if (isEditing) {
         await axios.put(
           `${configs.API_BASE_URL}/quizzes/${quizId}/questions/${question.id}`,
@@ -78,7 +126,7 @@ const QuizQuestionForm = ({
         });
         questionId = res.data.id;
       }
-  
+
       const preparedAnswers = validAnswers.map((a) => ({
         id: a.id,
         quizId,
@@ -86,7 +134,7 @@ const QuizQuestionForm = ({
         value: a.value,
         correct: a.correct,
       }));
-  
+
       const existingAnswersRes = await axios.get(
         `${configs.API_BASE_URL}/quizzes/${quizId}/questions/${questionId}/answers`
       );
@@ -94,17 +142,17 @@ const QuizQuestionForm = ({
       const currentAnswerIds = preparedAnswers
         .map((a) => a.id)
         .filter((id) => !!id);
-  
+
       const answersToDelete = existingAnswerIds.filter(
         (id) => !currentAnswerIds.includes(id)
       );
-  
+
       const deletePromises = answersToDelete.map((id) =>
         axios.delete(
           `${configs.API_BASE_URL}/quizzes/${quizId}/questions/${questionId}/answers/${id}`
         )
       );
-  
+
       const updatePromises = preparedAnswers.map((a) => {
         if (a.id) {
           return axios.put(
@@ -115,9 +163,9 @@ const QuizQuestionForm = ({
           return axios.post(`${configs.API_BASE_URL}/answers`, a);
         }
       });
-  
+
       await Promise.all([...deletePromises, ...updatePromises]);
-  
+
       message.success(
         isEditing ? "Cập nhật câu hỏi thành công!" : "Thêm câu hỏi thành công!"
       );
@@ -129,11 +177,27 @@ const QuizQuestionForm = ({
       setLoading(false);
     }
   };
-  
-  
+
   return (
     <div style={{ marginBottom: 24 }}>
       <h4>{isEditing ? "Sửa câu hỏi" : "Thêm câu hỏi"}</h4>
+
+      <Input.TextArea
+        placeholder="Nhập mô tả để AI tạo câu hỏi trắc nghiệm"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        style={{ marginBottom: 12 }}
+        autoSize={{ minRows: 2, maxRows: 4 }}
+      />
+
+      <Button
+        type="primary"
+        onClick={handleGenerateFromAI}
+        loading={aiLoading}
+        style={{ marginBottom: 16 }}
+      >
+        Tạo câu hỏi với AI
+      </Button>
 
       <Input.TextArea
         placeholder="Nhập nội dung câu hỏi"
@@ -178,7 +242,7 @@ const QuizQuestionForm = ({
                 updated[idx].value = e.target.value;
                 setQuestion((prev) => ({ ...prev, answers: updated }));
               }}
-              style={{ width: 300 }}
+              style={{ width: 500 }}
             />
             <Button
               icon={<DeleteOutlined />}

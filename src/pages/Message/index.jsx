@@ -82,11 +82,12 @@ const MessagePage = () => {
     };
   }, [fetchConversations, user.id, handleNewMessage]);
 
-  const handleSelectConversation = (conv) => {
+  const handleSelectConversation = async (conv) => {
     if (selectedConversation?.id === conv.id) return;
 
     setSelectedConversation(conv);
     setMessages([]);
+
     fetchMessages(conv.id);
   };
 

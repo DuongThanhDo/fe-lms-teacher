@@ -4,11 +4,12 @@ import { EditOutlined, DeleteOutlined, CheckOutlined, CloseOutlined, Exclamation
 import SectionItem from "./SectionItem";
 import AddNewItemForm from "./AddNewItemForm";
 import { useCurriculum } from "../context/CurriculumContext";
+import { CourseStatus } from "../utils/enums";
 
 const { confirm } = Modal;
 
 const CurriculumSection = ({ section }) => {
-  const { deleteSection, editSection } = useCurriculum();
+  const { deleteSection, editSection, course } = useCurriculum();
   const [editing, setEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(section.title);
   const [hovered, setHovered] = useState(false);
@@ -48,7 +49,7 @@ const CurriculumSection = ({ section }) => {
             <span>{`Chương ${section.index + 1}: ${section.title}`}</span>
           )}
 
-          {hovered && !editing && (
+          {hovered && !editing && course?.status != CourseStatus.PUBLISHED && (
             <div>
               <Button size="small" className="me-2" style={{ marginLeft: 8 }} icon={<EditOutlined />} onClick={() => setEditing(true)} />
               <Button size="small" danger icon={<DeleteOutlined />} onClick={showDeleteConfirm} />

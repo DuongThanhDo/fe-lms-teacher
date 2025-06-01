@@ -4,9 +4,10 @@ import { PlusOutlined } from "@ant-design/icons";
 import AddNewSectionForm from "../../../components/AddNewSectionForm";
 import CurriculumSection from "../../../components/CurriculumSection";
 import { useCurriculum } from "../../../context/CurriculumContext";
+import { CourseStatus } from "../../../utils/enums";
 
 const Curriculum = () => {
-  const { sections, addSection } = useCurriculum();
+  const { course, sections, addSection } = useCurriculum();
   const [isAddingSection, setIsAddingSection] = useState(false);
   const [newSectionTitle, setNewSectionTitle] = useState("");
 
@@ -28,9 +29,9 @@ const Curriculum = () => {
           setIsAddingSection={setIsAddingSection}
         />
       ) : (
-        <Button type="dashed" onClick={() => setIsAddingSection(true)} icon={<PlusOutlined />}>
+        course?.status != CourseStatus.PUBLISHED && (<Button type="dashed" onClick={() => setIsAddingSection(true)} icon={<PlusOutlined />}>
           Thêm chương
-        </Button>
+        </Button>)
       )}
     </div>
   );
